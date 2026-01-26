@@ -1,9 +1,23 @@
 require("@matterlabs/hardhat-zksync-solc");
 require("@matterlabs/hardhat-zksync-verify");
+require('dotenv').config(); // Add this to use environment variables
 
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
+const RPC_URL = process.env.RPC_URL || "https://polygon-amoy.g.alchemy.com/v2/u1eW4I01Do195rnin9X6i";
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
+  defaultNetwork: "polygon-amoy",
+  networks: {
+    hardhat: {
+      chainId: 80002,
+    },
+    "polygon-amoy": {
+      url: RPC_URL,
+      accounts: PRIVATE_KEY ? [`0x${PRIVATE_KEY}`] : [],
+    },
+  },
+
   zksolc: {
     version: "1.4.1",
     compilerSource: "binary",
@@ -11,24 +25,6 @@ module.exports = {
       optimizer: {
         enabled: true,
       },
-    },
-  },
-  networks: {
-    zkSyncSepoliaTestnet: {
-      url: "https://sepolia.era.zksync.dev",
-      ethNetwork: "sepolia",
-      zksync: true,
-      chainId: 300,
-      verifyURL:
-        "https://explorer.sepolia.era.zksync.dev/contract_verification",
-    },
-    zkSyncMainnet: {
-      url: "https://mainnet.era.zksync.io",
-      ethNetwork: "mainnet",
-      zksync: true,
-      chainId: 324,
-      verifyURL:
-        "https://zksync2-mainnet-explorer.zksync.io/contract_verification",
     },
   },
   paths: {
